@@ -13,6 +13,7 @@
 		3D35B1BD28B49C0A0029C932 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D35B1BB28B49C0A0029C932 /* Main.storyboard */; };
 		3D35B1BF28B49C0B0029C932 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D35B1BE28B49C0B0029C932 /* Assets.xcassets */; };
 		3D35B1C228B49C0B0029C932 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D35B1C028B49C0B0029C932 /* LaunchScreen.storyboard */; };
+		3D35B1E928B4A9950029C932 /* AgoraRtcKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3D35B1E828B4A9950029C932 /* AgoraRtcKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D35B1E928B4A9950029C932 /* AgoraRtcKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +83,9 @@
 			dependencies = (
 			);
 			name = "Bendigo Project";
+			packageProductDependencies = (
+				3D35B1E828B4A9950029C932 /* AgoraRtcKit */,
+			);
 			productName = "Bendigo Project";
 			productReference = 3D35B1B228B49C0A0029C932 /* Bendigo Project.app */;
 			productType = "com.apple.product-type.application";
@@ -109,6 +114,9 @@
 				Base,
 			);
 			mainGroup = 3D35B1A928B49C0A0029C932;
+			packageReferences = (
+				3D35B1E728B4A9950029C932 /* XCRemoteSwiftPackageReference "AgoraRtcEngine_iOS_Beta" */,
+			);
 			productRefGroup = 3D35B1B328B49C0A0029C932 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -360,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3D35B1E728B4A9950029C932 /* XCRemoteSwiftPackageReference "AgoraRtcEngine_iOS_Beta" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/agorabuilder/AgoraRtcEngine_iOS_Beta.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3D35B1E828B4A9950029C932 /* AgoraRtcKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D35B1E728B4A9950029C932 /* XCRemoteSwiftPackageReference "AgoraRtcEngine_iOS_Beta" */;
+			productName = AgoraRtcKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3D35B1AA28B49C0A0029C932 /* Project object */;
 }
