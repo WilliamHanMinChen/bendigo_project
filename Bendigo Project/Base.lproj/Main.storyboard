@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="87a-N9-3Sy">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,13 +16,86 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arView>
+                    <navigationItem key="navigationItem" id="yvg-U3-88C">
+                        <barButtonItem key="backBarButtonItem" title=" " id="wPL-2d-ZSV"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="arView" destination="8bC-Xf-vdC" id="TPV-4x-avp"/>
+                        <segue destination="7N3-eO-ohP" kind="show" identifier="ARToVideoSegue" id="FVQ-5O-Zuz"/>
+                        <segue destination="UED-uT-5nJ" kind="presentation" identifier="ARToDetailsSegue" modalPresentationStyle="fullScreen" id="dn5-Vi-mei"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138" y="134"/>
+            <point key="canvasLocation" x="394" y="134"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="K1y-V5-9pu">
+            <objects>
+                <viewController id="UED-uT-5nJ" customClass="DetailViewController" customModule="Bendigo_Project" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KN9-ux-Gkn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BKV-IP-L4I">
+                                <rect key="frame" x="-317" y="-143" width="1032" height="1130"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="bjV-Hz-UNU"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="BKV-IP-L4I" firstAttribute="centerY" secondItem="bjV-Hz-UNU" secondAttribute="centerY" id="chw-jn-Nm6"/>
+                            <constraint firstItem="BKV-IP-L4I" firstAttribute="centerX" secondItem="bjV-Hz-UNU" secondAttribute="centerX" id="lbv-u1-mXj"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="hGv-BZ-UwM"/>
+                    <connections>
+                        <outlet property="imageView" destination="BKV-IP-L4I" id="MIT-zK-NBh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VxE-xS-BoT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1367" y="-629"/>
+        </scene>
+        <!--Video Call View Controller-->
+        <scene sceneID="IE2-lM-1bN">
+            <objects>
+                <viewController storyboardIdentifier="video" id="7N3-eO-ohP" customClass="VideoCallViewController" customModule="Bendigo_Project" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="v8o-P6-bvW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="pik-mx-ATP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eCP-tq-9JG"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mbR-R3-U2W" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1368" y="134"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="dFg-hQ-SzP">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="87a-N9-3Sy" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rFA-4w-JlG">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="gog-rW-Qzf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0jc-Ot-2Kw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-403" y="134"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

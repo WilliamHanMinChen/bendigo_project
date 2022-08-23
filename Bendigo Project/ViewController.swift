@@ -112,6 +112,16 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     }
     
     
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        //Pause the recognistion
+        arView.session.pause()
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //Setup the ARView
@@ -443,7 +453,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     self.farAudioPlayer.setVolume(0, fadeDuration: 1.5)
                     self.descriptionAudioPlayer.setVolume(0, fadeDuration: 1.5)
                 }
-
+                
             }
         }
         
@@ -976,52 +986,48 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         case .up:
             print("Swiped up")
             //Check if theres only one image on screen
-            if oneImageOnScreen{
-                //If there is only one, perform the segue
-                
+            if descriptionAudioPlayer.isPlaying{
                 //Give haptic feedback
                 hardImpact.impactOccurred()
                 performSegue(withIdentifier: "ARToDetailsSegue", sender: nil)
-                
-                
             }
             
         case .down:
             print("Swiped down")
-            //            if let firstSwipeDownTime = firstSwipeDownTime { //If there was already a swipe down
-            //                if Date().timeIntervalSince(firstSwipeDownTime) < 5.0 { //If the last swipe was within 5 seconds
-            //
-            //                    if UIAccessibility.isVoiceOverRunning {
-            //                        UIAccessibility.post(notification: .screenChanged, argument: "Connecting you to someone")
-            //                    }
-            //
-            //
-            //                    let screen = self.storyboard?.instantiateViewController(withIdentifier: "video") as? VideoCallViewController
-            //                    screen?.parentVC = self
-            //
-            //                    screen?.modalPresentationStyle = .fullScreen
-            //                    let transition = CATransition()
-            //                    transition.duration = 0.3
-            //                    transition.type = CATransitionType.push
-            //                    transition.subtype = CATransitionSubtype.fromBottom
-            //                    view.window!.layer.add(transition, forKey: kCATransition)
-            //                    self.present(screen!, animated: false, completion: nil)
-            //
-            //                } else { //Update the last swipe time and announce something to the user
-            //                    self.firstSwipeDownTime = Date()
-            //                    if UIAccessibility.isVoiceOverRunning {
-            //                        UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
-            //                    }
-            //
-            //
-            //                }
-            //
-            //            } else {
-            //                self.firstSwipeDownTime = Date()
-            //                if UIAccessibility.isVoiceOverRunning {
-            //                    UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
-            //                }
-            //            }
+            if let firstSwipeDownTime = firstSwipeDownTime { //If there was already a swipe down
+                if Date().timeIntervalSince(firstSwipeDownTime) < 5.0 { //If the last swipe was within 5 seconds
+                    
+                    if UIAccessibility.isVoiceOverRunning {
+                        UIAccessibility.post(notification: .screenChanged, argument: "Connecting you to someone")
+                    }
+                    
+                    
+                    let screen = self.storyboard?.instantiateViewController(withIdentifier: "video") as? VideoCallViewController
+                    screen?.parentVC = self
+                    
+                    screen?.modalPresentationStyle = .fullScreen
+                    let transition = CATransition()
+                    transition.duration = 0.3
+                    transition.type = CATransitionType.push
+                    transition.subtype = CATransitionSubtype.fromBottom
+                    view.window!.layer.add(transition, forKey: kCATransition)
+                    self.present(screen!, animated: false, completion: nil)
+                    
+                } else { //Update the last swipe time and announce something to the user
+                    self.firstSwipeDownTime = Date()
+                    if UIAccessibility.isVoiceOverRunning {
+                        UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
+                    }
+                    
+                    
+                }
+                
+            } else {
+                self.firstSwipeDownTime = Date()
+                if UIAccessibility.isVoiceOverRunning {
+                    UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
+                }
+            }
             
         case .left:
             print("Swipe left handled")
@@ -1054,5 +1060,13 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     func changeBrightness(brightness: CGFloat){
         UIScreen.main.brightness = brightness
     }
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ARToDetailsSegue"{ //If we are going to the details screen
+            let destionation = segue.destination as! DetailViewController
+            destionation.parentVC = self
+            destionation.imageSelected = currentDescriptionAnchor?.name
+        }
+    }
+    
 }
