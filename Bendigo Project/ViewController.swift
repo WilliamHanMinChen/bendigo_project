@@ -13,7 +13,7 @@ import AVFoundation
 import Darwin
 
 class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate  {
-
+    
     //The view handling all AR interactions
     @IBOutlet var arView: ARView!
     
@@ -27,12 +27,12 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     let hardImpact = UIImpactFeedbackGenerator(style: .heavy)
     
     //The audio player for description
-    var descriptionAudioPlayer: AVAudioPlayer?
+    var descriptionAudioPlayer: AVAudioPlayer = AVAudioPlayer()
     
     //The audio players for the different layers of sound
-    var closeAudioPlayer: AVAudioPlayer?
-    var mediumAudioPlayer: AVAudioPlayer?
-    var farAudioPlayer: AVAudioPlayer?
+    var closeAudioPlayer: AVAudioPlayer = AVAudioPlayer()
+    var mediumAudioPlayer: AVAudioPlayer = AVAudioPlayer()
+    var farAudioPlayer: AVAudioPlayer = AVAudioPlayer()
     
     
     //Keeps track of whether we are already playing media or not
@@ -104,11 +104,11 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         super.viewDidLoad()
         
         
-//        // Load the "Box" scene from the "Experience" Reality File
-//        let boxAnchor = try! Experience.loadBox()
-//        
-//        // Add the box anchor to the scene
-//        arView.scene.anchors.append(boxAnchor)
+        //        // Load the "Box" scene from the "Experience" Reality File
+        //        let boxAnchor = try! Experience.loadBox()
+        //
+        //        // Add the box anchor to the scene
+        //        arView.scene.anchors.append(boxAnchor)
     }
     
     
@@ -130,7 +130,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         //Provide it to the configuration
         configuration.detectionObjects = referenceObjects
         configuration.detectionImages = referenceImages
-
+        
         //Give it a maximum number it can track at the same time
         configuration.maximumNumberOfTrackedImages = 10
         
@@ -268,7 +268,6 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         
         //Loop through the anchors (Currently tracked images)
         for anchor in anchors {
-            
             let anchorPosition = anchor.transform.columns.3
             //Create a line between the camera and the anchor
             let cameraToAnchor = cameraPosition - anchorPosition
@@ -277,8 +276,6 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
             
             //Print it for debugging
             print("\(anchor.name) \(anchorDistance) m")
-            
-
         }
         
         var currentDictionary : [String: String] = [:]
@@ -292,13 +289,12 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         
         //Check if the user can only see one image
         if anchors.count == 1 {
-            
             //Check if the user is within the focus distance
             if anchorDistance < FOCUS_DISTANCE{
                 //If we are, play the description
                 if playing { //If we are already playing something, check if the anchor is the same anchor, if not, play the new audio tape
                     guard let currentDescriptionAnchor = currentDescriptionAnchor else { //If we have a current description anchor
-                    return
+                        return
                     }
                     if currentDescriptionAnchor.name == anchors[0].name { //If they are the same anchor, dont do anything
                     } else {
@@ -325,6 +321,25 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     playSuccessSound()
                     //Play the description
                     playDescription(name: name)
+                    
+                    //Check if our layering sound is for the right painting
+                    if currentLayerAnchor?.name == currentDescriptionAnchor?.name {
+                        //If it is the same, we reduce the sound
+                        closeAudioPlayer.volume = 0.2
+                        mediumAudioPlayer.volume = 0.2
+                        farAudioPlayer.volume = 0.2
+                    } else {
+                        //If they are not the same
+                        //First we stop all the layer of sounds
+                        stopLayeringSound()
+                        //Update our current anchor
+                        currentLayerAnchor = anchors[0]
+                        //We then play audio again
+                        
+                        playCloseLayer(currentDictionary: currentDictionary)
+                        playMediumLayer(currentDictionary: currentDictionary)
+                        playFarLayer(currentDictionary: currentDictionary)
+                    }
                 }
             } else if anchorDistance < 1.5 { //Less than 1.5m away: Close
                 
@@ -335,7 +350,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     } else { //Different name, then we load the layer of sounds again
                         //First we stop all the layer of sounds
                         stopLayeringSound()
-                    
+                        
                         //Update our current anchor
                         currentLayerAnchor = anchors[0]
                         //We then play audio again
@@ -351,16 +366,16 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     playCloseLayer(currentDictionary: currentDictionary)
                     if !mediumLayerPlaying {
                         playMediumLayer(currentDictionary: currentDictionary)
-                        mediumAudioPlayer?.volume = 0.9
+                        mediumAudioPlayer.volume = 0.9
                     }
                     if !farLayerPlaying {
                         playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer?.volume = 0.9
+                        farAudioPlayer.volume = 0.9
                     }
                 }
-                mediumAudioPlayer?.volume = 0.9
-                farAudioPlayer?.volume = 0.9
-                self.closeAudioPlayer?.volume = Float(pow((0.75 / anchorDistance), 3))
+                mediumAudioPlayer.volume = 0.9
+                farAudioPlayer.volume = 0.9
+                self.closeAudioPlayer.volume = Float(pow((0.75 / anchorDistance), 3))
                 
                 
                 
@@ -379,7 +394,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                         currentLayerAnchor = anchors[0]
                         playMediumLayer(currentDictionary: currentDictionary)
                         playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer?.volume = 0.9
+                        farAudioPlayer.volume = 0.9
                     }
                 } else { //We are not currently playing, fetch the audio
                     //Update our current anchor
@@ -387,10 +402,10 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     playMediumLayer(currentDictionary: currentDictionary)
                     if !farLayerPlaying {
                         playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer?.volume = 0.9
+                        farAudioPlayer.volume = 0.9
                     }
                 }
-                self.mediumAudioPlayer?.volume = Float(pow((1.5 / anchorDistance), 3))
+                self.mediumAudioPlayer.volume = Float(pow((1.5 / anchorDistance), 3))
                 
                 
             } else { //Further than that: Far
@@ -416,63 +431,27 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     
                     playFarLayer(currentDictionary: currentDictionary)
                 }
-                self.farAudioPlayer?.volume = Float(pow((3.0 / anchorDistance), 3))
+                self.farAudioPlayer.volume = Float(pow((3.0 / anchorDistance), 3))
             }
         }
         
-//
-//
-//        //If there is only one image on the screen
-//        if countTracked(anchors: anchors) == 1 && anchorDistance < FOCUS_DISTANCE{
-//            if !oneImageOnScreen{ //If first time finding this image
-//                //Play sound and feedback
-//                AudioServicesPlaySystemSound(self.systemSoundID)
-//                let delay = 0.5
-//                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-//
-//                    let generator = UINotificationFeedbackGenerator()
-//                    generator.notificationOccurred(.success)
-//                }
-//
-//            }
-//            //Should handle the swipe gesture
-//            oneImageOnScreen = true
-//
-//
-//        } else if countTracked(anchors: anchors) == 0 { //If there are no images, pause all layering sounds
-//
-//            guard let closeAudioPlayer = closeAudioPlayer, let mediumAudioPlayer = mediumAudioPlayer, let farAudioPlayer = farAudioPlayer else {
-//                return
-//            }
-//
-//            if closeAudioPlayer.isPlaying || mediumAudioPlayer.isPlaying || farAudioPlayer.isPlaying {
-//                stopLayeringSound()
-//                //Wait some time
-//
-//                let delay = 1.5
-//                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-//                    self.closeLayerPlaying = false
-//                    self.mediumLayerPlaying = false
-//                    self.farLayerPlaying = false
-//                }
-//            }
-//
-//        } else {
-//
-//            //More than one image on screen, shouldnt handle the swipe gesture
-//            oneImageOnScreen = false
-//
-//
-//        }
+        if countTracked(anchors: anchors) == 0{
+            if closeAudioPlayer.isPlaying || mediumAudioPlayer.isPlaying || farAudioPlayer.isPlaying || descriptionAudioPlayer.isPlaying {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+                    self.closeAudioPlayer.setVolume(0.0, fadeDuration: 1.5)
+                    self.mediumAudioPlayer.setVolume(0.0, fadeDuration: 1.5)
+                    self.farAudioPlayer.setVolume(0, fadeDuration: 1.5)
+                    self.descriptionAudioPlayer.setVolume(0, fadeDuration: 1.5)
+                }
+
+            }
+        }
         
         
         //Get the cloesst image we calculated before
         let closestImage = anchors[0]
         //Get the distance
         let distance = length(cameraPosition - closestImage.transform.columns.3)
-        
-        let name = closestImage.name
-        
         
         //Depending on the distance, we give intervaled feedback
         if Date().timeIntervalSince(lastImapctTime) > ((Double(distance)/impactRatio)) && distance > Float(FOCUS_DISTANCE) {
@@ -492,6 +471,24 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     
     // MARK: Helper methods
+    
+    func countTracked(anchors: [ARAnchor]) -> Int{
+        
+        var count = 0
+        
+        for anchor in anchors {
+            guard let imageAnchor = anchor as? ARImageAnchor else {
+                return 0
+            }
+            
+            if imageAnchor.isTracked {
+                count += 1
+            }
+        }
+        return count
+        
+    }
+    
     
     func getImageName(anchorName: String) -> String{
         var imageName = ""
@@ -846,8 +843,8 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                 }
                 
                 self.closeAudioPlayer = try AVAudioPlayer(data: data)
-                self.closeAudioPlayer?.numberOfLoops = -1
-                self.closeAudioPlayer?.play()
+                self.closeAudioPlayer.numberOfLoops = -1
+                self.closeAudioPlayer.play()
                 
                 
             } catch {
@@ -875,8 +872,8 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                 }
                 
                 self.mediumAudioPlayer = try AVAudioPlayer(data: data)
-                self.mediumAudioPlayer?.numberOfLoops = -1
-                self.mediumAudioPlayer?.play()
+                self.mediumAudioPlayer.numberOfLoops = -1
+                self.mediumAudioPlayer.play()
                 
                 
             } catch {
@@ -908,25 +905,25 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                 }
                 
                 self.farAudioPlayer = try AVAudioPlayer(data: data)
-                self.farAudioPlayer?.numberOfLoops = -1
-                self.farAudioPlayer?.play()
-
+                self.farAudioPlayer.numberOfLoops = -1
+                self.farAudioPlayer.play()
+                
             } catch {
                 fatalError(error.localizedDescription)
             }
             
         }
-
+        
     }
     
     
-
+    
     //Plays the description file
     func playDescription(name: String){
         Task {
             do {
                 //Set current anchor we are playing
-                self.descriptionAudioPlayer?.stop()
+                self.descriptionAudioPlayer.stop()
                 guard let url = self.audioDictionary[name], let audioURL = URL(string: url) else {
                     fatalError("Invalid URL")
                     
@@ -941,9 +938,9 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                 self.descriptionAudioPlayer = try AVAudioPlayer(data: data)
                 let delay = 0.2
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                    self.descriptionAudioPlayer?.play()
+                    self.descriptionAudioPlayer.play()
                 }
-                self.descriptionAudioPlayer?.delegate = self
+                self.descriptionAudioPlayer.delegate = self
                 
             }
             catch { print(error.localizedDescription)
@@ -965,29 +962,11 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     func stopLayeringSound(){
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-            self.closeAudioPlayer?.setVolume(0.0, fadeDuration: 1.5)
-            self.mediumAudioPlayer?.setVolume(0.0, fadeDuration: 1.5)
-            self.farAudioPlayer?.setVolume(0, fadeDuration: 1.5)
+            self.closeAudioPlayer.setVolume(0.0, fadeDuration: 1.5)
+            self.mediumAudioPlayer.setVolume(0.0, fadeDuration: 1.5)
+            self.farAudioPlayer.setVolume(0, fadeDuration: 1.5)
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     // MARK: Action Methods
@@ -1009,40 +988,40 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
             
         case .down:
             print("Swiped down")
-//            if let firstSwipeDownTime = firstSwipeDownTime { //If there was already a swipe down
-//                if Date().timeIntervalSince(firstSwipeDownTime) < 5.0 { //If the last swipe was within 5 seconds
-//
-//                    if UIAccessibility.isVoiceOverRunning {
-//                        UIAccessibility.post(notification: .screenChanged, argument: "Connecting you to someone")
-//                    }
-//
-//
-//                    let screen = self.storyboard?.instantiateViewController(withIdentifier: "video") as? VideoCallViewController
-//                    screen?.parentVC = self
-//
-//                    screen?.modalPresentationStyle = .fullScreen
-//                    let transition = CATransition()
-//                    transition.duration = 0.3
-//                    transition.type = CATransitionType.push
-//                    transition.subtype = CATransitionSubtype.fromBottom
-//                    view.window!.layer.add(transition, forKey: kCATransition)
-//                    self.present(screen!, animated: false, completion: nil)
-//
-//                } else { //Update the last swipe time and announce something to the user
-//                    self.firstSwipeDownTime = Date()
-//                    if UIAccessibility.isVoiceOverRunning {
-//                        UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
-//                    }
-//
-//
-//                }
-//
-//            } else {
-//                self.firstSwipeDownTime = Date()
-//                if UIAccessibility.isVoiceOverRunning {
-//                    UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
-//                }
-//            }
+            //            if let firstSwipeDownTime = firstSwipeDownTime { //If there was already a swipe down
+            //                if Date().timeIntervalSince(firstSwipeDownTime) < 5.0 { //If the last swipe was within 5 seconds
+            //
+            //                    if UIAccessibility.isVoiceOverRunning {
+            //                        UIAccessibility.post(notification: .screenChanged, argument: "Connecting you to someone")
+            //                    }
+            //
+            //
+            //                    let screen = self.storyboard?.instantiateViewController(withIdentifier: "video") as? VideoCallViewController
+            //                    screen?.parentVC = self
+            //
+            //                    screen?.modalPresentationStyle = .fullScreen
+            //                    let transition = CATransition()
+            //                    transition.duration = 0.3
+            //                    transition.type = CATransitionType.push
+            //                    transition.subtype = CATransitionSubtype.fromBottom
+            //                    view.window!.layer.add(transition, forKey: kCATransition)
+            //                    self.present(screen!, animated: false, completion: nil)
+            //
+            //                } else { //Update the last swipe time and announce something to the user
+            //                    self.firstSwipeDownTime = Date()
+            //                    if UIAccessibility.isVoiceOverRunning {
+            //                        UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
+            //                    }
+            //
+            //
+            //                }
+            //
+            //            } else {
+            //                self.firstSwipeDownTime = Date()
+            //                if UIAccessibility.isVoiceOverRunning {
+            //                    UIAccessibility.post(notification: .announcement, argument: "Swipe down again to speak to someone")
+            //                }
+            //            }
             
         case .left:
             print("Swipe left handled")
@@ -1056,9 +1035,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         }
     }
     
-    
     @IBAction func onTap(_ sender: UITapGestureRecognizer) {
-        
         
         let tapLocation: CGPoint = sender.location(in: arView)
         let result: [CollisionCastHit] = arView.hitTest(tapLocation)
@@ -1073,8 +1050,9 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         print(entity.name)
     }
     
-    
-    
-    
-    
+    //Changes the display's brightness
+    func changeBrightness(brightness: CGFloat){
+        UIScreen.main.brightness = brightness
+    }
+
 }
