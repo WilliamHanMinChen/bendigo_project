@@ -74,7 +74,8 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         "rapallo" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/fortress.m4a?alt=media&token=c8e18851-f6b8-4e9c-8f45-9a2e97826fe7",
         "woman": "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/woman.m4a?alt=media&token=48ff1ced-55ed-4472-aade-10db846fac14",
         "polygon": "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/woman.m4a?alt=media&token=48ff1ced-55ed-4472-aade-10db846fac14",
-        "cow" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/a-cow-in-a-landscape.wav?alt=media&token=64b970e2-8e65-4e76-acb0-5e8498661864"]
+        "cow" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/a-cow-in-a-landscape.wav?alt=media&token=64b970e2-8e65-4e76-acb0-5e8498661864",
+        "elvis_house" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/Audio%20Files%2FObject%20Audios%2Felvispresleyhouse.m4a?alt=media&token=77f1ead5-46ec-4e55-a7b3-de2499a09e6e"]
     
     
     //Temporary dictionary to keep track of all the layers of audio
@@ -218,8 +219,6 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     fatalError("Could not find the image file")
                 }
                 
-                
-                
                 //Create a plane
                 let mesh: MeshResource = .generatePlane(width: Float(referenceImage.physicalSize.width), depth: Float(referenceImage.physicalSize.height))
                 
@@ -260,7 +259,28 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
             } else { //It is an object anchor
                 // TODO: Add code for recognising an object
                 print("Spotted an object")
-            }
+                
+                
+                
+                //Create a plane
+
+                let refObjectAnchor = AnchorEntity(anchor: anchor)
+                
+                let refObjectMarker = ModelEntity(mesh: .generateSphere(radius: 0.02), materials: [SimpleMaterial(color: .brown, isMetallic: false)])
+                    
+                refObjectMarker.position.y = 0.04
+                //refImageMarker.orientation = simd_quatf(angle: Float.pi/4, axis: [0, 1, 0])
+                refObjectAnchor.addChild(refObjectMarker)
+                
+                    
+                guard let name = anchor.name else {
+                    fatalError("No name associated with this object")
+                }
+                //Set the same
+                refObjectAnchor.name = name
+                    
+                arView.scene.addAnchor(refObjectAnchor)
+        }
         }
         
     }
@@ -307,6 +327,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                         return
                     }
                     if currentDescriptionAnchor.name == anchors[0].name { //If they are the same anchor, dont do anything
+                        descriptionAudioPlayer.volume = 1.0
                     } else {
                         //Play the new audio tape
                         guard let name = anchors[0].name else {
