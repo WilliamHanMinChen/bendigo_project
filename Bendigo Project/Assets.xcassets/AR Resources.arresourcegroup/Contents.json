@@ -1,0 +1,26 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "resources" : [
+    {
+      "filename" : "bridge.arreferenceimage"
+    },
+    {
+      "filename" : "cow.arreferenceimage"
+    },
+    {
+      "filename" : "elvis_house.arobject"
+    },
+    {
+      "filename" : "polygon.arreferenceimage"
+    },
+    {
+      "filename" : "rapallo.arreferenceimage"
+    },
+    {
+      "filename" : "woman.arreferenceimage"
+    }
+  ]
+}

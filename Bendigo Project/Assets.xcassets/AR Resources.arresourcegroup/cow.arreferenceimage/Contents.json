@@ -1,0 +1,16 @@
+{
+  "images" : [
+    {
+      "filename" : "a-cow-in-a-landscape.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "unit" : "centimeters",
+    "width" : 37
+  }
+}
