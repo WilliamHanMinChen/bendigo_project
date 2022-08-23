@@ -45,7 +45,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     
     //Keeps track of which anchor we are currently playing description for
-    var currentDescriptionAnchor: ARAnchor?
+    var currentMusicAnchor: ARAnchor?
     
     //Keeps track of which anchor we are playing the layered sound for
     var currentLayerAnchor: ARAnchor?
@@ -74,8 +74,9 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         "rapallo" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/fortress.m4a?alt=media&token=c8e18851-f6b8-4e9c-8f45-9a2e97826fe7",
         "woman": "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/woman.m4a?alt=media&token=48ff1ced-55ed-4472-aade-10db846fac14",
         "polygon": "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/woman.m4a?alt=media&token=48ff1ced-55ed-4472-aade-10db846fac14",
-        "cow" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/a-cow-in-a-landscape.wav?alt=media&token=64b970e2-8e65-4e76-acb0-5e8498661864",
-        "elvis_house" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/Audio%20Files%2FObject%20Audios%2Felvispresleyhouse.m4a?alt=media&token=77f1ead5-46ec-4e55-a7b3-de2499a09e6e"]
+        "cow" : "https://firebasestorage.googleapis.com/v0/b/rate-monash.appspot.com/o/a-cow-in-a-landscape.wav?alt=media&token=a5636747-735e-4443-8626-0ebe2c8d2fcd",
+        "elvis_house" : "https://firebasestorage.googleapis.com/v0/b/bendigo-art-gallery.appspot.com/o/Audio%20Files%2FObject%20Audios%2Felvispresleyhouse.m4a?alt=media&token=77f1ead5-46ec-4e55-a7b3-de2499a09e6e",
+        "hip" : "https://firebasestorage.googleapis.com/v0/b/rate-monash.appspot.com/o/hip-hip-hurrah.wav?alt=media&token=6adb2ceb-0f05-48b3-99af-84ae598227f1"]
     
     
     //Temporary dictionary to keep track of all the layers of audio
@@ -317,32 +318,34 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
             currentDictionary = self.defaultDistionary
         }
         
+        descriptionAudioPlayer.numberOfLoops = -1
         //Check if the user can only see one image
         if anchors.count == 1 {
             //Check if the user is within the focus distance
             if anchorDistance < FOCUS_DISTANCE{
                 //If we are, play the description
                 if playing { //If we are already playing something, check if the anchor is the same anchor, if not, play the new audio tape
-                    guard let currentDescriptionAnchor = currentDescriptionAnchor else { //If we have a current description anchor
+                    guard let currentMusicAnchor = currentMusicAnchor else { //make sure we have an anchor
                         return
                     }
-                    if currentDescriptionAnchor.name == anchors[0].name { //If they are the same anchor, dont do anything
+                    if currentMusicAnchor.name == anchors[0].name { //If they are the same anchor, dont do anything
                         descriptionAudioPlayer.volume = 1.0
                     } else {
                         //Play the new audio tape
                         guard let name = anchors[0].name else {
                             fatalError("This anchor does not have a name")
                         }
-                        self.currentDescriptionAnchor = anchors[0]
+                        self.currentMusicAnchor = anchors[0]
                         //Play the success sound
                         playSuccessSound()
                         //Play the description
                         playDescription(name: name)
+                        descriptionAudioPlayer.volume = 1.0
                     }
                     
                 } else { //If we are not playing anything
                     self.playing = true
-                    self.currentDescriptionAnchor = anchors[0]
+                    self.currentMusicAnchor = anchors[0]
                     
                     guard let name = anchors[0].name else {
                         fatalError("This anchor does not have a name")
@@ -352,117 +355,38 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     playSuccessSound()
                     //Play the description
                     playDescription(name: name)
-                    
-                    //Check if our layering sound is for the right painting
-                    if currentLayerAnchor?.name == currentDescriptionAnchor?.name {
-                        //If it is the same, we reduce the sound
-                        closeAudioPlayer.volume = 0.2
-                        mediumAudioPlayer.volume = 0.2
-                        farAudioPlayer.volume = 0.2
+                    descriptionAudioPlayer.volume = 1.0
+                }
+            } else { //We are outside the focus distance, set the volume of the music dynamically
+                //If we are playing
+                if playing { //If we are already playing something, check if the anchor is the same anchor, if not, play the new audio tape
+                    guard let currentMusicAnchor = currentMusicAnchor else { //If we have a current description anchor
+                        return
+                    }
+                    if currentMusicAnchor.name == anchors[0].name { //If they are the same anchor, dont do anything
+                        descriptionAudioPlayer.volume = Float(pow(FOCUS_DISTANCE/anchorDistance, 3))
                     } else {
-                        //If they are not the same
-                        //First we stop all the layer of sounds
-                        stopLayeringSound()
-                        //Update our current anchor
-                        currentLayerAnchor = anchors[0]
-                        //We then play audio again
-                        
-                        playCloseLayer(currentDictionary: currentDictionary)
-                        playMediumLayer(currentDictionary: currentDictionary)
-                        playFarLayer(currentDictionary: currentDictionary)
+                        //Play the new audio tape
+                        guard let name = anchors[0].name else {
+                            fatalError("This anchor does not have a name")
+                        }
+                        self.currentMusicAnchor = anchors[0]
+                        //Play the description
+                        playDescription(name: name)
+                        descriptionAudioPlayer.volume = Float(pow(FOCUS_DISTANCE/anchorDistance, 3))
                     }
-                }
-            } else if anchorDistance < 1.5 { //Less than 1.5m away: Close
-                
-                if closeLayerPlaying { //If we are currently already playing something, check if its from the same anchor, if not play new sound
-                    //Check if our current anchor is the same as the previous one
-                    if currentLayerAnchor?.name == anchors[0].name { //Same name, we do nothing
-                        
-                    } else { //Different name, then we load the layer of sounds again
-                        //First we stop all the layer of sounds
-                        stopLayeringSound()
-                        
-                        //Update our current anchor
-                        currentLayerAnchor = anchors[0]
-                        //We then play audio again
-                        
-                        playCloseLayer(currentDictionary: currentDictionary)
-                        playMediumLayer(currentDictionary: currentDictionary)
-                        playFarLayer(currentDictionary: currentDictionary)
-                        
-                    }
-                } else { //We are not currently playing, fetch the audio
-                    //Update our current anchor
-                    currentLayerAnchor = anchors[0]
-                    playCloseLayer(currentDictionary: currentDictionary)
-                    if !mediumLayerPlaying {
-                        playMediumLayer(currentDictionary: currentDictionary)
-                        mediumAudioPlayer.volume = 0.9
-                    }
-                    if !farLayerPlaying {
-                        playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer.volume = 0.9
-                    }
-                }
-                mediumAudioPlayer.volume = 0.9
-                farAudioPlayer.volume = 0.9
-                self.closeAudioPlayer.volume = Float(pow((0.75 / anchorDistance), 3))
-                
-                
-                
-            } else if anchorDistance < 3.0 { //Less than 3.0 meters away: Medium
-                
-                if mediumLayerPlaying { //If we are currently already playing something, check if its from the same anchor, if not play new sound
-                    //Check if our current anchor is the same as the previous one
-                    if currentLayerAnchor?.name == anchors[0].name { //Same name, we do nothing
-                        
-                    } else { //Different name, then we load the layer of sounds again
-                        //First we stop all the layer of sounds
-                        stopLayeringSound()
-                        
-                        //We then play audio again
-                        //Update our current anchor
-                        currentLayerAnchor = anchors[0]
-                        playMediumLayer(currentDictionary: currentDictionary)
-                        playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer.volume = 0.9
-                    }
-                } else { //We are not currently playing, fetch the audio
-                    //Update our current anchor
-                    currentLayerAnchor = anchors[0]
-                    playMediumLayer(currentDictionary: currentDictionary)
-                    if !farLayerPlaying {
-                        playFarLayer(currentDictionary: currentDictionary)
-                        farAudioPlayer.volume = 0.9
-                    }
-                }
-                self.mediumAudioPlayer.volume = Float(pow((1.5 / anchorDistance), 3))
-                
-                
-            } else { //Further than that: Far
-                
-                if farLayerPlaying { //If we are currently already playing something, check if its from the same anchor, if not play new sound
-                    //Check if our current anchor is the same as the previous one
-                    if currentLayerAnchor?.name == anchors[0].name { //Same name, we do nothing
-                        
-                    } else { //Different name, then we load the layer of sounds again
-                        //First we stop all the layer of sounds
-                        stopLayeringSound()
-                        
-                        //We then play audio again
-                        //Update our current anchor
-                        currentLayerAnchor = anchors[0]
-                        playFarLayer(currentDictionary: currentDictionary)
-                    }
-                } else { //We are not currently playing, fetch the audio
                     
-                    //Update our current anchor
-                    currentLayerAnchor = anchors[0]
+                } else { //If we are not playing anything
+                    self.playing = true
+                    self.currentMusicAnchor = anchors[0]
                     
-                    
-                    playFarLayer(currentDictionary: currentDictionary)
+                    guard let name = anchors[0].name else {
+                        fatalError("This anchor does not have a name")
+                    }
+                    //Play the description
+                    playDescription(name: name)
+                    descriptionAudioPlayer.volume = Float(pow(FOCUS_DISTANCE/anchorDistance, 3))
                 }
-                self.farAudioPlayer.volume = Float(pow((3.0 / anchorDistance), 3))
             }
         }
         
@@ -532,6 +456,8 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
             imageName = "woman1.jpg"
         case "cow":
             imageName = "cow1.jpg"
+        case "hip":
+            imageName = "hip1.jpg"
         default:
             imageName = "test1.jpg"
         }
@@ -838,7 +764,6 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        playing = false
     }
     
     func radarHaptic(impactIntensity: UIImpactFeedbackGenerator.FeedbackStyle, distance: Float){
@@ -951,6 +876,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     //Plays the description file
     func playDescription(name: String){
+        print("Called play description")
         Task {
             do {
                 //Set current anchor we are playing
@@ -1086,7 +1012,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
         if segue.identifier == "ARToDetailsSegue"{ //If we are going to the details screen
             let destionation = segue.destination as! DetailViewController
             destionation.parentVC = self
-            destionation.imageSelected = currentDescriptionAnchor?.name
+            destionation.imageSelected = currentMusicAnchor?.name
         }
     }
     
