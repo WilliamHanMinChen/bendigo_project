@@ -338,6 +338,27 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                         playSuccessSound()
                         //Play the description
                         playDescription(name: name)
+                        
+                        //Check if our layering sound is for the right painting
+                        if currentLayerAnchor?.name == currentDescriptionAnchor.name {
+                            //If it is the same, we reduce the sound
+                            closeAudioPlayer.volume = 0.2
+                            mediumAudioPlayer.volume = 0.2
+                            farAudioPlayer.volume = 0.2
+                        } else {
+                            //If they are not the same
+                            //First we stop all the layer of sounds
+                            stopLayeringSound()
+                            //Update our current anchor
+                            currentLayerAnchor = anchors[0]
+                            //We then play audio again
+                            
+                            playCloseLayer(currentDictionary: currentDictionary)
+                            playMediumLayer(currentDictionary: currentDictionary)
+                            playFarLayer(currentDictionary: currentDictionary)
+                        }
+                        
+                        
                     }
                     
                 } else { //If we are not playing anything
@@ -473,7 +494,14 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
                     self.mediumAudioPlayer.setVolume(0.0, fadeDuration: 1.5)
                     self.farAudioPlayer.setVolume(0, fadeDuration: 1.5)
                     self.descriptionAudioPlayer.setVolume(0, fadeDuration: 1.5)
+                    self.mediumLayerPlaying = false
+                    self.closeLayerPlaying = false
+                    self.farLayerPlaying = false
                 }
+                
+                self.closeAudioPlayer.stop()
+                self.mediumAudioPlayer.stop()
+                self.farAudioPlayer.stop()
                 
             }
         }
