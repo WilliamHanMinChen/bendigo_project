@@ -23,7 +23,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     //Ratio of impact time, smaller value = faster haptic feedback
     var impactRatio = 3.0
     
-    //Hpatic feedback engine
+    //Haptic feedback engine
     let hardImpact = UIImpactFeedbackGenerator(style: .heavy)
     
     //The audio player for description
@@ -1112,7 +1112,7 @@ class ViewController: UIViewController, ARSessionDelegate, AVAudioPlayerDelegate
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ARToDetailsSegue"{ //If we are going to the details screen
-            let destionation = segue.destination as! DetailViewController
+            let destionation = segue.destination as! DetailsViewController
             destionation.parentVC = self
             destionation.imageSelected = currentDescriptionAnchor?.name
         }

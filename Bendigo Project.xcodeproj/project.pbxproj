@@ -14,6 +14,7 @@
 		3D35B1BF28B49C0B0029C932 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D35B1BE28B49C0B0029C932 /* Assets.xcassets */; };
 		3D35B1C228B49C0B0029C932 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D35B1C028B49C0B0029C932 /* LaunchScreen.storyboard */; };
 		3D35B1E928B4A9950029C932 /* AgoraRtcKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3D35B1E828B4A9950029C932 /* AgoraRtcKit */; };
+		3D7E5A0528BB277A00AD277F /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E5A0428BB277A00AD277F /* DetailsViewController.swift */; };
 		3DDBFA9228B4C62C008F07F3 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDBFA9128B4C62C008F07F3 /* DetailViewController.swift */; };
 		3DDBFA9428B4C646008F07F3 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDBFA9328B4C646008F07F3 /* VideoCallViewController.swift */; };
 		3DDBFA9B28B4C8BC008F07F3 /* JSONObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDBFA9928B4C8BC008F07F3 /* JSONObjects.swift */; };
@@ -28,6 +29,7 @@
 		3D35B1BC28B49C0A0029C932 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3D35B1BE28B49C0B0029C932 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3D35B1C128B49C0B0029C932 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3D7E5A0428BB277A00AD277F /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		3DDBFA9128B4C62C008F07F3 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		3DDBFA9328B4C646008F07F3 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
 		3DDBFA9928B4C8BC008F07F3 /* JSONObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONObjects.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				3D35B1B528B49C0A0029C932 /* AppDelegate.swift */,
 				3D35B1B728B49C0A0029C932 /* ViewController.swift */,
 				3DDBFA9128B4C62C008F07F3 /* DetailViewController.swift */,
+				3D7E5A0428BB277A00AD277F /* DetailsViewController.swift */,
 				3DDBFA9328B4C646008F07F3 /* VideoCallViewController.swift */,
 				3D35B1B928B49C0A0029C932 /* Experience.rcproject */,
 				3D35B1BB28B49C0A0029C932 /* Main.storyboard */,
@@ -159,6 +162,7 @@
 				3DDBFA9428B4C646008F07F3 /* VideoCallViewController.swift in Sources */,
 				3D35B1B828B49C0A0029C932 /* ViewController.swift in Sources */,
 				3D35B1B628B49C0A0029C932 /* AppDelegate.swift in Sources */,
+				3D7E5A0528BB277A00AD277F /* DetailsViewController.swift in Sources */,
 				3DDBFA9C28B4C8BC008F07F3 /* Painting.swift in Sources */,
 				3D35B1BA28B49C0A0029C932 /* Experience.rcproject in Sources */,
 				3DDBFA9B28B4C8BC008F07F3 /* JSONObjects.swift in Sources */,

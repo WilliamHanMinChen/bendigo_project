@@ -29,29 +29,44 @@
             </objects>
             <point key="canvasLocation" x="394" y="134"/>
         </scene>
-        <!--Detail View Controller-->
+        <!--Details View Controller-->
         <scene sceneID="K1y-V5-9pu">
             <objects>
-                <viewController id="UED-uT-5nJ" customClass="DetailViewController" customModule="Bendigo_Project" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="UED-uT-5nJ" customClass="DetailsViewController" customModule="Bendigo_Project" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KN9-ux-Gkn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BKV-IP-L4I">
-                                <rect key="frame" x="-317" y="-143" width="1032" height="1130"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZbD-IB-ufj">
+                                <rect key="frame" x="87" y="384" width="240" height="128"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d9l-V1-nBu">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="d9l-V1-nBu" firstAttribute="leading" secondItem="ZbD-IB-ufj" secondAttribute="leading" id="Oax-c8-AyS"/>
+                                    <constraint firstItem="d9l-V1-nBu" firstAttribute="top" secondItem="ZbD-IB-ufj" secondAttribute="top" id="TxL-Xj-8Io"/>
+                                    <constraint firstItem="d9l-V1-nBu" firstAttribute="bottom" secondItem="ZbD-IB-ufj" secondAttribute="bottom" constant="690" id="ZjS-Bq-24Y"/>
+                                    <constraint firstItem="d9l-V1-nBu" firstAttribute="trailing" secondItem="ZbD-IB-ufj" secondAttribute="trailing" constant="174" id="ouj-iL-1th"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Q55-57-DEi"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="Qg8-Xy-fmR"/>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bjV-Hz-UNU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="BKV-IP-L4I" firstAttribute="centerY" secondItem="bjV-Hz-UNU" secondAttribute="centerY" id="chw-jn-Nm6"/>
-                            <constraint firstItem="BKV-IP-L4I" firstAttribute="centerX" secondItem="bjV-Hz-UNU" secondAttribute="centerX" id="lbv-u1-mXj"/>
+                            <constraint firstItem="bjV-Hz-UNU" firstAttribute="trailing" secondItem="ZbD-IB-ufj" secondAttribute="trailing" id="5Th-Sx-bXP"/>
+                            <constraint firstItem="ZbD-IB-ufj" firstAttribute="leading" secondItem="bjV-Hz-UNU" secondAttribute="leading" id="S93-Sj-iiE"/>
+                            <constraint firstItem="ZbD-IB-ufj" firstAttribute="top" secondItem="bjV-Hz-UNU" secondAttribute="top" id="hfU-pL-1TX"/>
+                            <constraint firstItem="bjV-Hz-UNU" firstAttribute="bottom" secondItem="ZbD-IB-ufj" secondAttribute="bottom" id="nEf-BZ-vJr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="hGv-BZ-UwM"/>
                     <connections>
-                        <outlet property="imageView" destination="BKV-IP-L4I" id="MIT-zK-NBh"/>
+                        <outlet property="imageView" destination="d9l-V1-nBu" id="rBz-5g-Lqg"/>
+                        <outlet property="scrollView" destination="ZbD-IB-ufj" id="pLZ-8K-twT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VxE-xS-BoT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

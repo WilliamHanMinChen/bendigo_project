@@ -196,9 +196,6 @@ class DetailViewController: UIViewController {
         } catch {
             print(error)
         }
-        
-        
-        
     }
     
     
@@ -416,7 +413,6 @@ class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //setUp()
         
     }
     
@@ -649,10 +645,6 @@ class DetailViewController: UIViewController {
 
         //This prints it
         print("Tapped outside of all regions")
-        
-        
-        
-        
         
         
         //TODO: OPTIMISE FOR BETTER PERFORMANCE
