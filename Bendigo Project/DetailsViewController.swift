@@ -61,7 +61,6 @@ class DetailsViewController: UIViewController, UIScrollViewDelegate {
         UIScreen.main.brightness = CGFloat(1.0)
         
         
-        
         //Set the delegate
         scrollView.delegate = self
         
@@ -167,8 +166,7 @@ class DetailsViewController: UIViewController, UIScrollViewDelegate {
                     
                     width = result.original_width
                     height = result.original_height
-                    print(width)
-                    print(height)
+
                     //Create and empty list of points
                     var points: [Point] = []
                     for point in value.points{ //Loop through the points also convert them to the right ratio
@@ -699,10 +697,6 @@ class DetailsViewController: UIViewController, UIScrollViewDelegate {
             mediumImpact.impactOccurred()
             lastImpactTime = Date()
         }
-        
-        print("Current scroll offset \(scrollOffset)")
-        
-        print("Current scale  \(scrollView.zoomScale)")
         
         
         //Bottom edge
