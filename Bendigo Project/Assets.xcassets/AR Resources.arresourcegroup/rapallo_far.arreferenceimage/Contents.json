@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "1940.3_col_20130522_i.v001_0001_co.jpg",
+      "filename" : "portait2.jpg",
       "idiom" : "universal"
     }
   ],
@@ -11,6 +11,6 @@
   },
   "properties" : {
     "unit" : "centimeters",
-    "width" : 29.835000000000001
+    "width" : 100
   }
 }

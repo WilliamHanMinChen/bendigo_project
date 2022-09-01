@@ -5,6 +5,9 @@
   },
   "resources" : [
     {
+      "filename" : "bridge_far.arreferenceimage"
+    },
+    {
       "filename" : "bridge.arreferenceimage"
     },
     {
@@ -17,7 +20,13 @@
       "filename" : "polygon.arreferenceimage"
     },
     {
+      "filename" : "rapallo_far.arreferenceimage"
+    },
+    {
       "filename" : "rapallo.arreferenceimage"
+    },
+    {
+      "filename" : "woman_far.arreferenceimage"
     },
     {
       "filename" : "woman.arreferenceimage"
